@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 
 class NamedEntityClient:
@@ -7,4 +7,14 @@ class NamedEntityClient:
         self.model = model
 
     def get_ents(self, sentance: str) -> Dict:
-        return {}
+        doc = self.model(sentance)
+        entities = [{'ent': ent.text, 'label': map_label(ent.label_)}
+                    for ent in doc.ents]
+        return {'ents': entities, 'html': []}
+
+
+def map_label(label: str) -> Optional[str]:
+    label_map = {
+        'PERSON': 'Person'
+    }
+    return label_map.get(label)
